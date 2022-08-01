@@ -21,7 +21,7 @@ function initCarousel() {
     if (event.target.closest('.carousel__arrow').classList.contains("carousel__arrow_left")) {
       if (position > 0) {
       position -= carouselInner.offsetWidth;
-      carouselInner.style.transform = `translateX(-${a}px)`;
+      carouselInner.style.transform = `translateX(-${position}px)`;
       rightArrow.style.display = '';
       };
       
