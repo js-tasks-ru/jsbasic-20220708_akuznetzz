@@ -6,7 +6,7 @@ export default class ProductCard {
   constructor(product) {
     this.product = product;
     this.elem = this.render();
-    this.elem.addEventListener('click', this.plusButtonEvent.bind(this))
+    this.elem.addEventListener('click', this.plusButtonEvent.bind(this));
   }
   render() {
   
@@ -22,23 +22,20 @@ export default class ProductCard {
           <img src="/assets/images/icons/plus-icon.svg" alt="icon">
       </button>
   </div>
-</div>
-`)
-    return card
+  </div>
+  `);
+    return card;
   }
 
   plusButtonEvent(event) {
     
       if(event.target.closest('.card__button')) {
-            
             this.elem.dispatchEvent (new CustomEvent("product-add", {
             detail: this.product.id, 
             bubbles: true 
           }))
-  
+      }
   }
-
-}
 
 }
 

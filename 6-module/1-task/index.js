@@ -26,48 +26,39 @@ export default class UserTable {
 
   render() {
           /* заголовки таблицы */
-          let headers = ['Имя', 'возраст', 'зарплата', 'город']
+          let headers = ['Имя', 'возраст', 'зарплата', 'город'];
       
           let table = document.createElement('table');
-          document.body.append(table)
+          document.body.append(table);
     
-          let header = document.createElement('thead')
-          table.append(header)
+          let header = document.createElement('thead');
+          table.append(header);
     
-          let headerRow = document.createElement('tr')
-          header.append(headerRow)
+          let headerRow = document.createElement('tr');
+          header.append(headerRow);
     
-          headerRow.innerHTML = headers.map(item =>`<th>${item}</th>`).join('')
+          headerRow.innerHTML = headers.map(item =>`<th>${item}</th>`).join('');
           
             /* тело таблицы */
-          let tableBody = document.createElement('tbody')
-          table.append(tableBody)
+          let tableBody = document.createElement('tbody');
+          table.append(tableBody);
           
           this.rows.map(item => {
-            let tableRow = document.createElement('tr')
-            let deleteButton = document.createElement('button')
-            deleteButton.textContent = 'X'
+            let tableRow = document.createElement('tr');
+            let deleteButton = document.createElement('button');
+            deleteButton.textContent = 'X';
             for (let prop in item) {
-              let td = document.createElement('td') 
-              td.textContent = item[prop]
-              tableRow.append(td)
+              let td = document.createElement('td') ;
+              td.textContent = item[prop];
+              tableRow.append(td);
             }
             
-            tableRow.append(deleteButton)
-            tableBody.append(tableRow)
+            tableRow.append(deleteButton);
+            tableBody.append(tableRow);
           })
-          
-          
-
-          
-    
-          
 
           return table
 
   }
 
-
-
-  
 }

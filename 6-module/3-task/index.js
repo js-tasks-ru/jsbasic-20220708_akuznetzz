@@ -19,10 +19,9 @@ export default class Carousel {
     
     this.elem = this.container;
 
-    this.elem.addEventListener('click', this.clickHandler.bind(this))
+    this.elem.addEventListener('click', this.clickHandler.bind(this));
 
-    this.position = 0
-    
+    this.position = 0;
     
   }
 
@@ -39,8 +38,8 @@ export default class Carousel {
     </button>
   </div>
 </div>
-`)
-    return carouselSlide
+`);
+    return carouselSlide;
 
   }
 
@@ -50,9 +49,9 @@ export default class Carousel {
     <div class="carousel__arrow carousel__arrow_right">
       <img src="/assets/images/icons/angle-icon.svg" alt="icon">
     </div>
-    `)
+    `);
 
-    return arrow
+    return arrow;
   }
 
   arrowLeft () {
@@ -61,9 +60,9 @@ export default class Carousel {
     <div style = "display: none" class="carousel__arrow carousel__arrow_left">
       <img src="/assets/images/icons/angle-left-icon.svg" alt="icon">
     </div>
-    `)
+    `);
 
-    return arrow
+    return arrow;
   }
 
   clickHandler(event) {
@@ -73,7 +72,6 @@ export default class Carousel {
     
 
     if(event.target.closest('.carousel__button')) {
-          console.log(123)
           this.elem.dispatchEvent (new CustomEvent("product-add", {
           detail: event.target.closest('.carousel__slide').dataset.id, 
           bubbles: true 
@@ -90,7 +88,7 @@ export default class Carousel {
     }; 
   
     if (this.position == ((this.slidesAmount - 1) * this.carouselInner.offsetWidth)) {this.rightArrow.style.display = 'none'};
-  } else
+  } 
 
   if (event.target.closest(".carousel__arrow_left")) {
     if (this.position > 0) {
