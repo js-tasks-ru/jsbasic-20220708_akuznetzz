@@ -38,9 +38,10 @@ export default class StepSlider {
 
     let firstStep = slider.querySelectorAll('.slider__steps span')
 
+    // let firstStep = slider.querySelector(`.slider__steps > span:nth-child(${this.value + 1})`);
     firstStep[this.value].classList.add('slider__step-active');
 
-
+    // console.log(firstStep)
     
 
     slider.addEventListener('click', this.sliderClickHandler.bind(this));
@@ -66,13 +67,14 @@ export default class StepSlider {
     
 
     let steps = this.steps
-    let slider = document.querySelector('.slider')
-    let thumb = document.querySelector('.slider__thumb')
-    let sliderProgress = document.querySelector('.slider__progress')
+    // let slider = document.querySelector('.slider')
+    let slider = this.elem
+    let thumb = this.elem.querySelector('.slider__thumb')
+    let sliderProgress = this.elem.querySelector('.slider__progress')
     
-    slider.classList.add('slider_dragging')
+    this.elem.classList.add('slider_dragging')
 
-    
+    // console.log(slider)
 
     let shiftX = event.clientX - thumb.getBoundingClientRect().left;
 
@@ -81,11 +83,12 @@ export default class StepSlider {
 
     function onPointerMove(event) {
       event.preventDefault();
+      // console.log(this.elem)
       let sliderCoord = Math.round(event.clientX - shiftX - slider.getBoundingClientRect().left);
       let rightEdge = slider.offsetWidth - thumb.offsetWidth;
       let segmentsAmount = steps - 1;
       let percentPerStep = 100 / segmentsAmount;
-      let spanCollector = document.querySelectorAll('.slider__steps span')
+      let spanCollector = slider.querySelectorAll('.slider__steps span')
 
       
 
@@ -102,7 +105,7 @@ export default class StepSlider {
 
       let value = Math.round(leftPercent / percentPerStep);
 
-      document.querySelector('.slider__value').textContent = value;
+      slider.querySelector('.slider__value').textContent = value;
       if (!spanCollector[value].classList.contains('slider__step-active')) {
         !spanCollector[value].classList.add('slider__step-active')};
 
