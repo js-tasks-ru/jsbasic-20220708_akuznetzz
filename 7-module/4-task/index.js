@@ -4,13 +4,13 @@ export default class StepSlider {
   constructor({ steps, value = 0 }) {
     this.steps = steps;
     this.value = value;
-    this.elem = this.render();
+    this.render();
     
 
   }
 
   render() {
-    let slider = createElement(`
+    this.elem = createElement(`
     <div class="slider">
 
       <!--Ползунок слайдера с активным значением-->
@@ -32,11 +32,11 @@ export default class StepSlider {
 
     let i = 0; 
     while(i < this.steps) {
-      slider.querySelector('.slider__steps').innerHTML += `<span></span>`;
+      this.elem.querySelector('.slider__steps').innerHTML += `<span></span>`;
       i++
     };
 
-    let firstStep = slider.querySelectorAll('.slider__steps span')
+    let firstStep = this.elem.querySelectorAll('.slider__steps span')
 
     // let firstStep = slider.querySelector(`.slider__steps > span:nth-child(${this.value + 1})`);
     firstStep[this.value].classList.add('slider__step-active');
@@ -44,9 +44,9 @@ export default class StepSlider {
     // console.log(firstStep)
     
 
-    slider.addEventListener('click', this.sliderClickHandler.bind(this));
+    this.elem.addEventListener('click', this.sliderClickHandler.bind(this));
 
-    let thumb = slider.querySelector('.slider__thumb');
+    let thumb = this.elem.querySelector('.slider__thumb');
     thumb.addEventListener('pointerdown', this.sliderHandler.bind(this));
 
 
@@ -58,7 +58,7 @@ export default class StepSlider {
     thumb.onpointermove = (e) => {
       e.preventDefault();}
 
-    return slider;
+    return this.elem;
   }
 
   sliderHandler(event) {
@@ -66,9 +66,9 @@ export default class StepSlider {
 
     
 
-    let steps = this.steps
+    // let steps = this.steps
     // let slider = document.querySelector('.slider')
-    let slider = this.elem
+    // let slider = this.elem
     let thumb = this.elem.querySelector('.slider__thumb')
     let sliderProgress = this.elem.querySelector('.slider__progress')
     
@@ -78,17 +78,16 @@ export default class StepSlider {
 
     let shiftX = event.clientX - thumb.getBoundingClientRect().left;
 
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerup', onPointerUp);
 
-    function onPointerMove(event) {
+
+    let onPointerMove = event => {
       event.preventDefault();
       // console.log(this.elem)
-      let sliderCoord = Math.round(event.clientX - shiftX - slider.getBoundingClientRect().left);
-      let rightEdge = slider.offsetWidth - thumb.offsetWidth;
-      let segmentsAmount = steps - 1;
+      let sliderCoord = Math.round(event.clientX - shiftX - this.elem.getBoundingClientRect().left);
+      let rightEdge = this.elem.offsetWidth - thumb.offsetWidth;
+      let segmentsAmount = this.steps - 1;
       let percentPerStep = 100 / segmentsAmount;
-      let spanCollector = slider.querySelectorAll('.slider__steps span')
+      let spanCollector = this.elem.querySelectorAll('.slider__steps span')
 
       
 
@@ -105,7 +104,7 @@ export default class StepSlider {
 
       let value = Math.round(leftPercent / percentPerStep);
 
-      slider.querySelector('.slider__value').textContent = value;
+      this.elem.querySelector('.slider__value').textContent = value;
       if (!spanCollector[value].classList.contains('slider__step-active')) {
         !spanCollector[value].classList.add('slider__step-active')};
 
@@ -118,17 +117,19 @@ export default class StepSlider {
 
     }
 
-    function onPointerUp(event) {
-      slider.classList.remove('slider_dragging')
+    let onPointerUp = event => {
+      this.elem.classList.remove('slider_dragging')
       document.removeEventListener('pointermove', onPointerMove);
 
-      document.dispatchEvent(new CustomEvent('slider-change', { 
-      detail: document.querySelector('.slider__value').textContent, 
+      this.elem.dispatchEvent(new CustomEvent('slider-change', { 
+      detail: this.elem.querySelector('.slider__value').textContent, 
       bubbles: true 
       }));
       
     }
 
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
 
   }
 
