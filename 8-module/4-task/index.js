@@ -13,23 +13,55 @@ export default class Cart {
   }
 
   addProduct(product) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+
+    if (!product || product === null) return
+   
+    let existing = this.cartItems.findIndex(item => item.product.name === product.name )
+    
+    if (existing === -1) {
+      let cartItem = {
+        'product': product,
+        'count': 1
+      }
+      
+      this.cartItems.push(cartItem)
+    } else {
+      this.cartItems[existing].count++
+
+    }
+
+    this.onProductUpdate(this.cartItems)
+   
   }
 
   updateProductCount(productId, amount) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let index = this.cartItems.findIndex(item => item.product.id === productId )
+    
+    this.cartItems[index].count += amount
+
+    if (!this.cartItems[index].count) {
+      
+      this.cartItems.splice(index, 1)
+
+      
+    }
+
+    this.onProductUpdate(this.cartItems)
+    
   }
 
   isEmpty() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if(this.cartItems.length > 0) {return false} else {return true}
   }
 
   getTotalCount() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let result
+    return result = this.cartItems.reduce((sum,item) => sum + item.count, 0)
   }
 
   getTotalPrice() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let result
+    return result = this.cartItems.reduce((sum,item) => sum + (item.product.price * item.count), 0)
   }
 
   renderProduct(product, count) {
@@ -52,7 +84,7 @@ export default class Cart {
               <img src="/assets/images/icons/square-plus-icon.svg" alt="plus">
             </button>
           </div>
-          <div class="cart-product__price">€${product.price.toFixed(2)}</div>
+          <div class="cart-product__price">€${(product.price * count).toFixed(2) }</div>
         </div>
       </div>
     </div>`);
@@ -84,21 +116,94 @@ export default class Cart {
   }
 
   renderModal() {
-    // ...ваш код
+    this.modalCart = new Modal();
+    
+    this.modalCart.setTitle('Your order')
+    this.modalCart.setBody(this.createBody())
+    this.modalCart.open()
+
+    this.form = this.modalCart.modal.querySelector('.cart-form')
+
+    this.form.addEventListener('submit', event => {
+      event.preventDefault();
+      this.onSubmit(event)
+      
+    })
+
+ 
+    
   }
 
   onProductUpdate(cartItem) {
-    // ...ваш код
+
+    if(this.modalCart) {
+      if (this.cartItems.length === 0) {this.modalCart.close()} else {
+      this.modalCart.modal.querySelector('.modal__body').innerHTML = '';
+      this.modalCart.modal.querySelector('.modal__body').append(this.createBody());
+      }
+    }
 
     this.cartIcon.update(this);
   }
 
   onSubmit(event) {
-    // ...ваш код
+    // console.log(this.form)
+    event.target.querySelector('BUTTON').classList.add('is-loading')
+
+    fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: new FormData(this.form)
+    })
+    .then(response => {
+      this.modalCart.setTitle('Success!');
+      this.cartItems = [];
+      this.modalCart.modal.querySelector('.modal__body').innerHTML = '';
+      this.modalCart.modal.querySelector('.modal__body').append(createElement(`
+      <div class="modal__body-inner">
+        <p>
+          Order successful! Your order is being cooked :) <br>
+          We’ll notify you about delivery time shortly.<br>
+          <img src="/assets/images/delivery.gif">
+        </p>
+      </div>
+      `))
+      // this.unProductUpdate(this.cartItems)
+    })
+  
+
+
   };
 
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
+  }
+
+  createBody() {
+    let modalBody = document.createElement('DIV')
+    this.cartItems.forEach(item => modalBody.append(this.renderProduct(item.product, item.count)))
+    modalBody.append(this.renderOrderForm())
+    this.productList = modalBody.querySelectorAll('.cart-product')
+
+    this.productList.forEach(item => {
+      item.addEventListener('click', event => {
+
+        let currentProductId = event.target.closest('.cart-product').dataset.productId
+        let index = this.cartItems.findIndex(item => item.product.id == currentProductId )
+
+        if (event.target.closest('.cart-counter__button_minus')) {
+          this.updateProductCount(currentProductId, -1)
+          this.onProductUpdate(this.cartItems[index])
+        }
+
+        if (event.target.closest('.cart-counter__button_plus')) {
+          this.updateProductCount(currentProductId, 1)
+          this.onProductUpdate(this.cartItems[index])
+        }
+      })
+    })
+    return modalBody
+
+
   }
 }
 
