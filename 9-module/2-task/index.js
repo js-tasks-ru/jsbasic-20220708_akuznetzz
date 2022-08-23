@@ -86,6 +86,5 @@ export default class Main {
           vegeterianOnly: document.getElementById('vegeterian-checkbox').checked
         })
       }
-    
   }
 }
